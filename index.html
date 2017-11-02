@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>[v-cloak] {
+  display:none;
+}
+ul,li{
+	margin:0;
+	padding: 0;
+}
+li{
+	margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+	<div id="app">
+	<h2>Task list</h2>
+	{{listLength}}
+		<ul>
+		<li v-for="(task, index) in tasks">
+			<p v-if="!task.editable">{{ task.text }}</p>
+			<input type="text"   v-on:keyup.enter="edit(index, task.text)" v-if="task.editable" v-model="task.text">
+			<input type="button" v-on:click="editab(index)" value="edit">
+			<input type="button" v-on:click="del(index)" value="delete">
+		</li>
+		</ul>
+	<input v-on:keyup.enter="add" v-model="newTaskName">
+	</div>
+</body>
+
+<script src="https://unpkg.com/vue"></script>
+<script>
+var app = new Vue({
+	el: '#app',
+	data: {
+	tasks: [],
+	newTaskName: '',
+	},
+	methods: {
+		add: function(){
+			if(this.newTaskName == "") return;
+			this.tasks.push({text: this.newTaskName, editable: false});
+			this.newTaskName= '';
+		},
+		del: function(index) {
+			if(index !== -1) {
+				this.tasks.splice(index,1);
+			}
+		},
+		edit: function(index, text) {
+			this.tasks[index].text = text;
+			this.tasks[index].editable = false;
+		},
+		editab: function(index) {
+			this.tasks[index].editable = true;
+		}
+	},
+	computed: {
+		listLength: function() {
+			return this.tasks.length;
+			}
+		}
+});
+</script>
+</html>
+
+

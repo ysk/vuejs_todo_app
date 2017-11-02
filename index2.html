@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>[v-cloak] {
+  display:none;
+}
+</style>
+</head>
+<body>
+    <div id="demo">
+
+        {{listLength}}
+        <P v-cloak>{{message}}</P>
+        <input v-model="message" placeholder="edit me">
+        <input type="button" v-on:click="add" value="add">
+        <ul>
+            <li v-for="(list, index) in lists" v-cloak>{{list}}
+                <input type="button" v-on:click="del(index)" value="del">
+                <input type="button" v-on:click="edit(index)" value="edit">
+            </li>
+        </ul>
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+  var app =  new Vue({
+        el: '#demo',
+        data: {
+            lists: [],
+            message: "",
+        },
+        methods:{
+            add: function(){
+                if (this.message == "") return;
+                this.lists.push(this.message);
+                this.message = "";
+            },
+            del: function(index){
+                if (index !== -1){
+                this.lists.splice(index, 1)
+                }
+            },
+            edit: function(index){
+             var result = prompt();
+             if(result == "") return;
+             this.lists.splice(index, 1, result);
+            }
+        },
+        computed: {
+            listLength: function(){
+                return this.lists.length;
+            }
+        }
+       // computed
+    });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+
+<style>
+[v-cloak] {
+    display: none;
+}
+</style>
+
+</head>
+<body>
+  <div id="app">
+    <router-link to="/top">トップページ</router-link>
+    <router-link to="/users">ユーザー一覧ページ</router-link>
+    <router-link :to="{ name: 'user', params: { userId: 123 }}">ユーザー詳細ページ</router-link>
+    <router-view></router-view>
+  </div>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdn.jsdelivr.net/vue.router/2.0.1/vue-router.min.js"></script>
+<script>
+// ユーザー詳細ページのコンポーネント定義
+var User = {
+  template:
+    '<div class="user">' + 
+      '<h2>ユーザーIDは {{ $route.params.userId }} です。</h2>' + 
+      '<router-link :to="\'/user/\' + $route.params.userId + \'/profile\'">ユーザーのプロフィールページを見る</router-link>' + 
+      '<router-link :to="\'/user/\' + $route.params.userId + \'/posts\'">ユーザーの投稿ページを見る</router-link>' + 
+      '<router-view></router-view>' + 
+    '</div>'
+}
+
+var UserProfile = {
+  template:
+    '<div class="user-profile">\
+    <h3>こちらはユーザー {{ $route.params.userId }} のプロフィールページです。</h3>\
+    </div>'
+}
+
+var UserPosts = {
+  template:
+    '<div class="user-posts">\
+    <h3>こちらはユーザー {{ $route.params.userId }} の投稿ページです。</h3>\
+    </div>'
+}
+
+var UserList = {
+    template:'<div>ユーザー一覧ページです。</div>'
+}
+
+var siteTop = {
+    template:'<div>トップページです。</div>'
+}
+
+var router = new VueRouter({
+  routes: [
+    {
+      path: '/top',
+      component: siteTop
+    },
+    {
+      path: '/users',
+      component:  UserList
+    },
+    {
+      path: '/user/:userId',
+      component: User,
+      name: 'user',
+      children: [
+        {
+          path: 'profile',
+          component: UserProfile
+        },
+        {
+          path: 'posts',
+          component: UserPosts
+        }
+      ]
+    }
+  ]
+})
+
+var app = new Vue({
+  router: router
+}).$mount('#app')
+</script>
+</body>
+
+</html>
